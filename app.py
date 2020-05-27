@@ -63,6 +63,7 @@ def extract_hash_tags(s):
 def post():
     url = "https://www.minds.com/api/v1/newsfeed"
     content = request.json
+    print(content)
     message = content["text"]
     hash_tags = extract_hash_tags(message)
     urls_in_text = get_url_in_text(message)
