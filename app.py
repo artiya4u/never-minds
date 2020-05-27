@@ -1,5 +1,6 @@
 import os
 import time
+import re
 
 import requests
 from flask import Flask, request
@@ -44,6 +45,20 @@ def log_in():
     return last_token["access_token"]
 
 
+def un_shorten(url):
+    session = requests.Session()  # so connections are recycled
+    resp = session.head(url, allow_redirects=True)
+    return resp.url
+
+
+def get_url_in_text(text):
+    found = re.search("(?P<url>https?://[^\s]+)", text)
+    if found is None:
+        return None
+    else:
+        return found.group("url")
+
+
 def extract_hash_tags(s):
     return set(part[1:] for part in s.split() if part.startswith('#'))
 
@@ -52,9 +67,14 @@ def extract_hash_tags(s):
 def post():
     url = "https://www.minds.com/api/v1/newsfeed"
     content = request.json
-    hash_tags = extract_hash_tags(content["text"])
+    message = content["text"]
+    hash_tags = extract_hash_tags(message)
+    url_in_text = get_url_in_text(message)
+    if url_in_text is not None:
+        message = message.replace(url_in_text, un_shorten(url))
+
     payload = {
-        "message": content["text"],
+        "message": message,
         "wire_threshold": None,
         "paywall": False,
         "time_created": None,
