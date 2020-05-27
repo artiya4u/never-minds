@@ -52,11 +52,7 @@ def un_shorten(url):
 
 
 def get_url_in_text(text):
-    found = re.search("(?P<url>https?://[^\s]+)", text)
-    if found is None:
-        return None
-    else:
-        return found.group("url")
+    return re.findall("(?P<url>https?://[^\s]+)", text)
 
 
 def extract_hash_tags(s):
@@ -69,9 +65,10 @@ def post():
     content = request.json
     message = content["text"]
     hash_tags = extract_hash_tags(message)
-    url_in_text = get_url_in_text(message)
-    if url_in_text is not None:
-        message = message.replace(url_in_text, un_shorten(url_in_text))
+    urls_in_text = get_url_in_text(message)
+    if len(urls_in_text) > 0:
+        for u in urls_in_text:
+            message = message.replace(u, un_shorten(u))
 
     payload = {
         "message": message,
@@ -96,7 +93,7 @@ def post():
 
     response = requests.request("POST", url, json=payload, headers=headers)
     post_status = response.json()["status"]
-    print(post_status, content["text"])
+    print(post_status, message)
     return post_status
 
 
