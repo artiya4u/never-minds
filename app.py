@@ -71,7 +71,7 @@ def post():
     hash_tags = extract_hash_tags(message)
     url_in_text = get_url_in_text(message)
     if url_in_text is not None:
-        message = message.replace(url_in_text, un_shorten(url))
+        message = message.replace(url_in_text, un_shorten(url_in_text))
 
     payload = {
         "message": message,
