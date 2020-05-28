@@ -24,7 +24,7 @@ def log_in():
         print('fetch new token')
         url = "https://www.minds.com/api/v2/oauth/token"
 
-        querystring = {"cb": f'{now}'}
+        querystring = {"cb": f'{int(now * 1000)}'}
 
         payload = {
             "grant_type": "password",
@@ -41,7 +41,7 @@ def log_in():
 
         response = requests.request("POST", url, json=payload, headers=headers, params=querystring)
         last_token = response.json()
-        last_token["expires"] = now + last_token["expires_in"] * 1000
+        last_token["expires"] = now + last_token["expires_in"]
     return last_token["access_token"]
 
 
