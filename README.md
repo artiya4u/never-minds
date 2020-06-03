@@ -41,8 +41,8 @@ Select Post in method, and application/json in content type.
 Paste the following snippet into the Body field and modify it to your liking. You should at least set the icon_url. (You can add other details like the post time, click the Add ingredient button to see what is available)
 ```
 {
-  "username":"{{UserName}}",
-  "text":"{{Text}}",
-  "content":"{{LinkToTweet}}"
+    "username":"<<<{{UserName}}>>>",
+    "text":"<<<{{Text}}>>>",
+    "content":"<<<{{LinkToTweet}}>>>"
 }
 ```
